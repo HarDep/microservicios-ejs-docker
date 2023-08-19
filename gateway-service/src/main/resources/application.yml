@@ -10,25 +10,25 @@ spring:
     gateway:
       routes:
         - id: customers
-          uri: ${internal.lb.uri}:9000
+          uri: http://customer-service:9000
           predicates:
             - Path=/api/customers**
           filters:
             - RewritePath=/(?<path>.*), /$\{path}
         - id: employees
-          uri: ${internal.lb.uri}:9001
+          uri: http://employee-service:9001
           predicates:
             - Path=/api/employees**
           filters:
             - RewritePath=/(?<path>.*), /$\{path}
         - id: vendors
-          uri: ${internal.lb.uri}:9002
+          uri: http://vendor-service:9002
           predicates:
             - Path=/api/vendors**
           filters:
             - RewritePath=/(?<path>.*), /$\{path}
         - id: webApp
-          uri: ${internal.lb.uri}:9003
+          uri: http://webapp-service:9003
           predicates:
             - Path=/**
           filters:
