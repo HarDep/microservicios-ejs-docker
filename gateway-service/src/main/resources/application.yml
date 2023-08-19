@@ -4,7 +4,7 @@ server:
   #ssl:
   #  enabled: true # Uses self-signed certificate because no key-store configuration is specified.
 
-internal.lb.uri: http://localhost
+internal.lb.uri: http://localhost:8080
 spring:
   cloud:
     gateway:
@@ -12,24 +12,24 @@ spring:
         - id: customers
           uri: http://customer-service:9000
           predicates:
-            - Path=/api/customers**
-          filters:
-            - RewritePath=/(?<path>.*), /$\{path}
+            - Path=/api/customers/**
+          #filters:
+           # - RewritePath=/(?<path>.*), /$\{path}
         - id: employees
           uri: http://employee-service:9001
           predicates:
-            - Path=/api/employees**
-          filters:
-            - RewritePath=/(?<path>.*), /$\{path}
+            - Path=/api/employees/**
+          #filters:
+           # - RewritePath=/(?<path>.*), /$\{path}
         - id: vendors
           uri: http://vendor-service:9002
           predicates:
-            - Path=/api/vendors**
-          filters:
-            - RewritePath=/(?<path>.*), /$\{path}
+            - Path=/api/vendors/**
+          #filters:
+           # - RewritePath=/(?<path>.*), /$\{path}
         - id: webApp
           uri: http://webapp-service:9003
           predicates:
             - Path=/**
-          filters:
-            - RewritePath=/(?<path>.*), /$\{path}
+          #filters:
+           # - RewritePath=/(?<path>.*), /$\{path}

@@ -1,28 +1,44 @@
 version: "3.9"
 services:
+  mysql-db:
+    container_name: mysql-db
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ps
+      MYSQL_DATABASE: system_m2
+#    volumes:
+ #     - db_data:/var/lib/mysql
   webapp-service:
     container_name: webapp-service
     image: webapp-service
+    restart: always
     build: .
     ports:
       - 9003:9003
-    networks:
-      - net_app
-    expose:
-      - 9003
+    depends_on:
+      - mysql-db
+      - customer-service
+      - employee-service
+      - vendor-service
   gateway-service:
     container_name: gateway-service
     image: gateway-service
+    restart: always
     build: ./gateway-service/
     ports:
       - 8080:8080
-    networks:
-      - net_app
-    expose:
-      - 8080
+    depends_on:
+      - mysql-db
+      - customer-service
+      - employee-service
+      - vendor-service
   customer-service:
     container_name: customer-service
     image: customer-service
+    restart: always
     build: ./customer-service/
     ports:
       - 9000:9000
@@ -30,16 +46,13 @@ services:
       - mysql-db
     environment:
       - DATABASE_URL=jdbc:mysql://mysql-db:3306/system_m2?allowPublicKeyRetrieval=true&useSSL=false
-      - DATABASE_USER=admin
+      - DATABASE_USER=root
       - DATABASE_PASSWORD=ps
       - DATABASE_NAME=system_m2
-    networks:
-      - net_app
-    expose:
-      - 9000
   employee-service:
     container_name: employee-service
     image: employee-service
+    restart: always
     build: ./employee-service/
     ports:
       - 9001:9001
@@ -47,16 +60,13 @@ services:
       - mysql-db
     environment:
       - DATABASE_URL=jdbc:mysql://mysql-db:3306/system_m2?allowPublicKeyRetrieval=true&useSSL=false
-      - DATABASE_USER=admin
+      - DATABASE_USER=root
       - DATABASE_PASSWORD=ps
       - DATABASE_NAME=system_m2
-    networks:
-      - net_app
-    expose:
-      - 9001
   vendor-service:
     container_name: vendor-service
     image: vendor-service
+    restart: always
     build: ./vendor-service/
     ports:
       - 9002:9002
@@ -64,27 +74,6 @@ services:
       - mysql-db
     environment:
       - DATABASE_URL=jdbc:mysql://mysql-db:3306/system_m2?allowPublicKeyRetrieval=true&useSSL=false
-      - DATABASE_USER=admin
+      - DATABASE_USER=root
       - DATABASE_PASSWORD=ps
       - DATABASE_NAME=system_m2
-    networks:
-      - net_app
-    expose:
-      - 9002
-  mysql-db:
-    container_name: mysql-db
-    image: mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: ps
-      MYSQL_DATABASE: system_m2
-    ports:
-      - 3306:3306
-    networks:
-      - net_app
-    expose:
-      - 3306
-networks:
-  net_app:
-    external: true
