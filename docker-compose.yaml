@@ -9,8 +9,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ps
       MYSQL_DATABASE: system_m2
-#    volumes:
- #     - db_data:/var/lib/mysql
+    volumes:
+      - db_data_m2:/var/lib/mysql
   webapp-service:
     container_name: webapp-service
     image: webapp-service
@@ -77,3 +77,6 @@ services:
       - DATABASE_USER=root
       - DATABASE_PASSWORD=ps
       - DATABASE_NAME=system_m2
+volumes:
+  db_data_m2:
+    external: true
