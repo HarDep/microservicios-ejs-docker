@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
-RUN ./mvnw dependency:resolve
+#chmod +x mvnw 
+RUN chmod +x mvnw && ./mvnw dependency:resolve
 
 COPY src ./src
 
